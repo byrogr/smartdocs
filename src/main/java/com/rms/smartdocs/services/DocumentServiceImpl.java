@@ -14,7 +14,7 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public List<String> getListDocuments()  {
         log.info("Getting list of documents");
-        return List.of("Document 1", "Document 2", "Document 3");
+        return List.of("Document 1", "Document 2", "Document 3", "Document 4");
     }
 
     @Override
