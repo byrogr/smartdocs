@@ -9,6 +9,7 @@ import java.util.stream.StreamSupport;
 import com.rms.smartdocs.models.dto.DocumentResponseDto;
 import com.rms.smartdocs.models.entities.Document;
 import com.rms.smartdocs.repositories.DocumentRepository;
+import com.rms.smartdocs.storage.BlobStorageService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class DocumentServiceImpl implements DocumentService {
 
     private final DocumentRepository documentRepository;
+    private final BlobStorageService blobStorageService;
 
     @Override
     public List<DocumentResponseDto> getListDocuments() {
@@ -45,11 +47,10 @@ public class DocumentServiceImpl implements DocumentService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El archivo es requerido");
         }
 
-        var document = new Document(
-                UUID.randomUUID().toString(),
-                file.getOriginalFilename(),
-                "uploaded",
-                Instant.now());
+        var id = UUID.randomUUID().toString();
+        blobStorageService.uploadFile(id, file);
+
+        var document = new Document(id, file.getOriginalFilename(), "uploaded", Instant.now());
 
         log.info("Saving document metadata for filename: {}", document.getFilename());
         var saved = documentRepository.save(document);
