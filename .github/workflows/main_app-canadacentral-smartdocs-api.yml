@@ -26,6 +26,9 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean install
+        env:
+          COSMOS_URI: ${{ secrets.COSMOS_URI }}
+          COSMOS_KEY: ${{ secrets.COSMOS_KEY }}
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
